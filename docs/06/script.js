@@ -3,6 +3,14 @@
 // api.openweathermap.org/data/2.5/forecast/daily?q=austin&cnt=5&appid=5ad304cdfd2a3284e3031eae940ea6b3
 // icon url: "http://openweathermap.org/img/w/" + iconcode + ".png";
 
+// 2020/04/22
+// Need to make links dissapear with - sign click
+// need to add graceful exit when leaving field
+// Metric Imperial toggling
+var storedCity = localStorage.getItem('lastCity');
+console.log(storedCity);
+
+
 $(document).ready(function () {
 
     function formatDate(date) {
@@ -22,7 +30,7 @@ $(document).ready(function () {
                 //data: "data",
                 dataType: "json",
                 success: function (response) {
-
+                    console.log(response);
                     $("#cityRow").append(`
                     <div class="col-lg-6">
                     <div class="card-group">
@@ -77,8 +85,8 @@ $(document).ready(function () {
                 console.log(response);
                 if (addLink) {
                     $("#cities").prepend(`
-                    <li class="nav-item" >
-                        <a class="nav-link cityLink" href="#link" data-value="${location}">${location}</a>
+                    <li class="nav-item" id="${location}_li">
+                    <a href="#remove" ><i class="fas fa-minus" data-value="${location}_li"></i>&nbsp;</a><a class="cityLink" href="#link" data-value="${location}">${location}&nbsp;&nbsp;</a>
                     </li>
                     `);
                 }
@@ -104,28 +112,45 @@ $(document).ready(function () {
         });
 
     }
-    getWeather("Atlanta", "metric", true);
+
+
+    //page start
+    $("#cityRow").empty();
+
+    if (storedCity != null) {
+        getWeather(storedCity, "metric", true);
+    }
 
     $("#inputNewCity").on("blur", function () {
-        event.stopPropagation();Aus
+        event.stopPropagation();
         if ($("#inputNewCity").val() != "") {
-            getWeather($("#inputNewCity").val(), "metric", true);
-            $("#inputNewCity").val("");
-        }
-    });
-    $("#inputNewCity").on("submit", function () {
-        event.stopPropagation();Aus
-        if ($("#inputNewCity").val() != "") {
+            storedCity = localStorage.setItem('lastCity', $("#inputNewCity").val());
             getWeather($("#inputNewCity").val(), "metric", true);
             $("#inputNewCity").val("");
         }
     });
 
+    $("#inputNewCity").keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            event.stopPropagation();
+            if ($("#inputNewCity").val() != "") {
+                storedCity = localStorage.setItem('lastCity', $("#inputNewCity").val());
+                getWeather($("#inputNewCity").val(), "metric", true);
+                $("#inputNewCity").val("");
+            }
+        }
+    });
 
     $(document).on("click", "a.cityLink", function () {
         console.log("made it here");
         event.stopPropagation();
         getWeather($(this).attr("data-value"), "metric", false);
+    });
+
+    $(document).on("click", ".fa-minus", function () {
+        console.log($(this).attr("data-value"));
+        $("#" + $(this).attr("data-value")).remove();
     });
 
 });
