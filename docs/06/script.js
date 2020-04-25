@@ -26,7 +26,7 @@ $(document).ready(function () {
             $.ajax({
                 type: "GET",
                 //alt= find
-                url: `http://api.openweathermap.org/data/2.5/forecast?q=${location}&cnt=20&units=${units}&mode=JSON&APPID=5ad304cdfd2a3284e3031eae940ea6b3`,
+                url: `https://api.openweathermap.org/data/2.5/forecast?q=${location}&cnt=20&units=${units}&mode=JSON&APPID=5ad304cdfd2a3284e3031eae940ea6b3`,
                 //data: "data",
                 dataType: "json",
                 success: function (response) {
@@ -78,7 +78,7 @@ $(document).ready(function () {
         $.ajax({
             type: "GET",
             //alt= find
-            url: `http://api.openweathermap.org/data/2.5/find?q=${location}&cnt=20&units=${units}&mode=JSON&APPID=5ad304cdfd2a3284e3031eae940ea6b3`,
+            url: `https://api.openweathermap.org/data/2.5/find?q=${location}&cnt=20&units=${units}&mode=JSON&APPID=5ad304cdfd2a3284e3031eae940ea6b3`,
             //data: "data",
             dataType: "json",
             success: function (response) {
